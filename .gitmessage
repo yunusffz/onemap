@@ -1,0 +1,42 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+
+# Types:
+#   feat:     A new feature
+#   fix:      A bug fix
+#   docs:     Documentation only changes
+#   style:    Changes that do not affect the meaning of the code
+#   refactor: A code change that neither fixes a bug nor adds a feature
+#   perf:     A code change that improves performance
+#   test:     Adding missing tests or correcting existing tests
+#   build:    Changes that affect the build system or external dependencies
+#   ci:       Changes to CI configuration files and scripts
+#   chore:    Other changes that don't modify src or test files
+#   revert:   Reverts a previous commit
+
+# Scope (optional):
+#   Examples: components, hooks, lib, app, config, etc.
+
+# Subject:
+#   - Use imperative, present tense: "change" not "changed" nor "changes"
+#   - Don't capitalize first letter
+#   - No dot (.) at the end
+
+# Body (optional):
+#   - Use imperative, present tense: "change" not "changed" nor "changes"
+#   - Include motivation for the change and contrast with previous behavior
+
+# Footer (optional):
+#   - Reference issues using: Closes #123, Fixes #456, etc.
+#   - BREAKING CHANGE: <description> (for breaking changes)
+
+# Examples:
+#   feat(map): add marker clustering support
+#   fix(ui): resolve button hover state issue
+#   docs: update README with installation instructions
+#   refactor(hooks): simplify useMap hook logic
+#   chore: update dependencies to latest versions
+

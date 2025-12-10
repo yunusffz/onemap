@@ -1,0 +1,41 @@
+# Conventional Commits Configuration for Cursor
+
+When generating commit messages, always follow the Conventional Commits specification:
+
+## Commit Message Format
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+## Types
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation only changes
+- `style`: Changes that do not affect the meaning of the code (formatting, missing semi-colons, etc.)
+- `refactor`: A code change that neither fixes a bug nor adds a feature
+- `perf`: A code change that improves performance
+- `test`: Adding missing tests or correcting existing tests
+- `build`: Changes that affect the build system or external dependencies
+- `ci`: Changes to CI configuration files and scripts
+- `chore`: Other changes that don't modify src or test files
+- `revert`: Reverts a previous commit
+
+## Rules
+1. Use imperative, present tense: "change" not "changed" nor "changes"
+2. Don't capitalize the first letter of the subject
+3. No dot (.) at the end of the subject
+4. Use the body to explain what and why vs. how
+5. Reference issues in the footer using: Closes #123, Fixes #456, etc.
+6. For breaking changes, add "BREAKING CHANGE:" in the footer
+
+## Examples
+- `feat(map): add marker clustering support`
+- `fix(ui): resolve button hover state issue`
+- `docs: update README with installation instructions`
+- `refactor(hooks): simplify useMap hook logic`
+- `chore: update dependencies to latest versions`
+
