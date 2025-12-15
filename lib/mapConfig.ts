@@ -22,3 +22,21 @@ export const MAP_STYLES = {
   OSM_BRIGHT: "https://tiles.openfreemap.org/styles/bright",
   OSM_LIBERTY: "https://tiles.openfreemap.org/styles/liberty",
 };
+
+// Map style options for dropdown
+export const MAP_STYLE_OPTIONS = [
+  { id: "positron", name: "Positron (Light)", url: MAP_STYLES.POSITRON },
+  { id: "dark", name: "Dark Matter", url: MAP_STYLES.DARK_MATTER },
+  { id: "voyager", name: "Voyager", url: MAP_STYLES.VOYAGER },
+  { id: "bright", name: "OSM Bright", url: MAP_STYLES.OSM_BRIGHT },
+  { id: "liberty", name: "OSM Liberty", url: MAP_STYLES.OSM_LIBERTY },
+];
+
+// Terrain DEM source for 3D terrain
+export const TERRAIN_SOURCE = {
+  type: "raster-dem" as const,
+  url: "https://demotiles.maplibre.org/terrain-tiles/tiles.json",
+  tileSize: 256,
+};
+
+export const TERRAIN_EXAGGERATION = 1.5;

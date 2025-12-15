@@ -29,10 +29,24 @@ export function useMap() {
     []
   );
 
+  const setPitch = useCallback((pitch: number) => {
+    mapRef.current?.easeTo({
+      pitch,
+      duration: 1000,
+    });
+  }, []);
+
+  const toggleView = useCallback((is3D: boolean) => {
+    const pitch = is3D ? 60 : 0;
+    setPitch(pitch);
+  }, [setPitch]);
+
   return {
     mapRef,
     getMap,
     flyTo,
     fitBounds,
+    setPitch,
+    toggleView,
   };
 }

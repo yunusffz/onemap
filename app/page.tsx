@@ -5,7 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Map } from "@/components/map/Map";
 import { MapMarker } from "@/components/map/MapMarker";
 import { MapPopup } from "@/components/map/MapPopup";
+import { StyleSwitcher } from "@/components/map/StyleSwitcher";
+import { TerrainControl } from "@/components/map/TerrainControl";
+import { ViewToggle } from "@/components/map/ViewToggle";
 import { useMap } from "@/hooks/useMap";
+import { DEFAULT_MAP_CONFIG } from "@/lib/mapConfig";
 
 interface Location {
   id: string;
@@ -46,8 +50,11 @@ async function fetchLocations(): Promise<Location[]> {
 }
 
 export default function Home() {
-  const { mapRef, flyTo } = useMap();
+  const { mapRef, flyTo, toggleView } = useMap();
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+  const [mapStyle, setMapStyle] = useState(DEFAULT_MAP_CONFIG.mapStyle);
+  const [terrainEnabled, setTerrainEnabled] = useState(false);
+  const [is3DView, setIs3DView] = useState(false);
 
   // Using TanStack Query to fetch locations
   const { data: locations, isLoading, error } = useQuery({
@@ -62,6 +69,16 @@ export default function Home() {
       latitude: location.latitude,
       zoom: 13,
     });
+  };
+
+  const handleViewToggle = () => {
+    const newIs3D = !is3DView;
+    setIs3DView(newIs3D);
+    toggleView(newIs3D);
+  };
+
+  const handleTerrainToggle = () => {
+    setTerrainEnabled(!terrainEnabled);
   };
 
   return (
@@ -129,6 +146,13 @@ export default function Home() {
 
         {/* Map */}
         <main className="flex-1 relative">
+          {/* Map Controls Overlay */}
+          <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+            <StyleSwitcher currentStyle={mapStyle} onStyleChange={setMapStyle} />
+            <ViewToggle is3D={is3DView} onToggle={handleViewToggle} />
+            <TerrainControl enabled={terrainEnabled} onToggle={handleTerrainToggle} />
+          </div>
+
           <Map
             mapRef={mapRef}
             initialViewState={{
@@ -136,6 +160,8 @@ export default function Home() {
               latitude: 37.8,
               zoom: 11,
             }}
+            mapStyle={mapStyle}
+            terrain={terrainEnabled}
             className="w-full h-full"
           >
             {locations?.map((location) => (
