@@ -25,12 +25,13 @@ export function StyleSwitcher({ currentStyle, onStyleChange }: StyleSwitcherProp
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
-          className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-md"
+          className="w-full justify-start hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+          title="Change Map Style"
         >
           <MapIcon className="h-4 w-4 mr-2" />
-          {currentStyleOption?.name || "Map Style"}
+          <span className="text-xs truncate">{currentStyleOption?.name || "Style"}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-48 !bg-white dark:!bg-gray-800">

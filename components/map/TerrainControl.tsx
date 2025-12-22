@@ -12,19 +12,18 @@ interface TerrainControlProps {
 export function TerrainControl({ enabled, onToggle }: TerrainControlProps) {
   return (
     <Button
-      variant="outline"
+      variant="ghost"
       size="sm"
       onClick={onToggle}
-      className={`bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-md ${
-        enabled ? "ring-2 ring-blue-500" : ""
+      className={`flex-1 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white ${
+        enabled ? "bg-blue-100 dark:bg-blue-900/30" : ""
       }`}
+      title={enabled ? "Disable 3D Terrain" : "Enable 3D Terrain"}
     >
-      <Mountain className="h-4 w-4 mr-2" />
-      3D Terrain
+      <Mountain className="h-4 w-4 mr-1" />
+      <span className="text-xs">Terrain</span>
       {enabled && (
-        <Badge variant="default" className="ml-2 text-xs px-1.5 py-0">
-          ON
-        </Badge>
+        <span className="ml-1 text-[10px] text-blue-600 dark:text-blue-400">●</span>
       )}
     </Button>
   );

@@ -11,20 +11,21 @@ interface ViewToggleProps {
 export function ViewToggle({ is3D, onToggle }: ViewToggleProps) {
   return (
     <Button
-      variant="outline"
+      variant="ghost"
       size="sm"
       onClick={onToggle}
-      className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-md"
+      className="flex-1 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+      title={is3D ? "Switch to 2D View" : "Switch to 3D View"}
     >
       {is3D ? (
         <>
-          <Cuboid className="h-4 w-4 mr-2" />
-          3D View
+          <Cuboid className="h-4 w-4 mr-1" />
+          <span className="text-xs">3D</span>
         </>
       ) : (
         <>
-          <Box className="h-4 w-4 mr-2" />
-          2D View
+          <Box className="h-4 w-4 mr-1" />
+          <span className="text-xs">2D</span>
         </>
       )}
     </Button>
