@@ -19,7 +19,7 @@ export interface GeoJSONLayerConfig {
   name: string;
   description?: string;
   sourceUrl: string;
-  geometryType: "polygon" | "line" | "point";
+  geometryType: "polygon" | "line" | "point" | "mixed";
   visible: boolean;
   style: LayerStyle;
   clustering?: ClusterConfig;

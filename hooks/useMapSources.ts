@@ -53,21 +53,40 @@ export function useMapSources(
       }
 
       // Update layer visibility
-      if (map.getLayer(layerId)) {
-        map.setLayoutProperty(
-          layerId,
-          "visibility",
-          config.visible ? "visible" : "none"
-        );
-      }
+      if (config.geometryType === "mixed") {
+        // Update visibility for all mixed geometry layers
+        const mixedLayers = [
+          `${layerId}-fill`,
+          `${layerId}-polygon-outline`,
+          `${layerId}-line`,
+          `${layerId}-point`,
+        ];
+        mixedLayers.forEach((id) => {
+          if (map.getLayer(id)) {
+            map.setLayoutProperty(
+              id,
+              "visibility",
+              config.visible ? "visible" : "none"
+            );
+          }
+        });
+      } else {
+        if (map.getLayer(layerId)) {
+          map.setLayoutProperty(
+            layerId,
+            "visibility",
+            config.visible ? "visible" : "none"
+          );
+        }
 
-      // Update outline layer visibility for polygons
-      if (config.geometryType === "polygon" && map.getLayer(`${layerId}-outline`)) {
-        map.setLayoutProperty(
-          `${layerId}-outline`,
-          "visibility",
-          config.visible ? "visible" : "none"
-        );
+        // Update outline layer visibility for polygons
+        if (config.geometryType === "polygon" && map.getLayer(`${layerId}-outline`)) {
+          map.setLayoutProperty(
+            `${layerId}-outline`,
+            "visibility",
+            config.visible ? "visible" : "none"
+          );
+        }
       }
 
       // Update cluster layers visibility for points
@@ -101,17 +120,32 @@ export function useMapSources(
         const layerId = config.id;
 
         // Remove layers
-        if (map.getLayer(`${layerId}-outline`)) {
-          map.removeLayer(`${layerId}-outline`);
-        }
-        if (map.getLayer(`${layerId}-cluster-count`)) {
-          map.removeLayer(`${layerId}-cluster-count`);
-        }
-        if (map.getLayer(`${layerId}-unclustered`)) {
-          map.removeLayer(`${layerId}-unclustered`);
-        }
-        if (map.getLayer(layerId)) {
-          map.removeLayer(layerId);
+        if (config.geometryType === "mixed") {
+          // Remove all mixed geometry layers
+          const mixedLayers = [
+            `${layerId}-point`,
+            `${layerId}-line`,
+            `${layerId}-polygon-outline`,
+            `${layerId}-fill`,
+          ];
+          mixedLayers.forEach((id) => {
+            if (map.getLayer(id)) {
+              map.removeLayer(id);
+            }
+          });
+        } else {
+          if (map.getLayer(`${layerId}-outline`)) {
+            map.removeLayer(`${layerId}-outline`);
+          }
+          if (map.getLayer(`${layerId}-cluster-count`)) {
+            map.removeLayer(`${layerId}-cluster-count`);
+          }
+          if (map.getLayer(`${layerId}-unclustered`)) {
+            map.removeLayer(`${layerId}-unclustered`);
+          }
+          if (map.getLayer(layerId)) {
+            map.removeLayer(layerId);
+          }
         }
 
         // Remove source
@@ -135,6 +169,61 @@ function addLayersForGeometry(
   sourceId: string,
   layerId: string
 ) {
+  // For mixed geometries, add layers for all types
+  if (config.geometryType === "mixed") {
+    // Polygons
+    map.addLayer({
+      id: `${layerId}-fill`,
+      type: "fill",
+      source: sourceId,
+      filter: ["in", ["geometry-type"], ["literal", ["Polygon", "MultiPolygon"]]],
+      paint: {
+        "fill-color": config.style.color,
+        "fill-opacity": config.style.fillOpacity || 0.4,
+      },
+    });
+
+    map.addLayer({
+      id: `${layerId}-polygon-outline`,
+      type: "line",
+      source: sourceId,
+      filter: ["in", ["geometry-type"], ["literal", ["Polygon", "MultiPolygon"]]],
+      paint: {
+        "line-color": config.style.strokeColor || config.style.color,
+        "line-width": config.style.strokeWidth || 2,
+        "line-opacity": config.style.opacity,
+      },
+    });
+
+    // Lines
+    map.addLayer({
+      id: `${layerId}-line`,
+      type: "line",
+      source: sourceId,
+      filter: ["in", ["geometry-type"], ["literal", ["LineString", "MultiLineString"]]],
+      paint: {
+        "line-color": config.style.color,
+        "line-width": config.style.strokeWidth || 2,
+        "line-opacity": config.style.opacity,
+      },
+    });
+
+    // Points
+    map.addLayer({
+      id: `${layerId}-point`,
+      type: "circle",
+      source: sourceId,
+      filter: ["in", ["geometry-type"], ["literal", ["Point", "MultiPoint"]]],
+      paint: {
+        "circle-color": config.style.color,
+        "circle-radius": 6,
+        "circle-opacity": config.style.opacity,
+      },
+    });
+
+    return;
+  }
+
   if (config.geometryType === "polygon") {
     // Fill layer
     map.addLayer({

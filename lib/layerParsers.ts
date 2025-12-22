@@ -140,21 +140,48 @@ export async function parseCSV(
 
 export function detectGeometryType(
   geojson: GeoJSON.FeatureCollection
-): "point" | "line" | "polygon" {
+): "point" | "line" | "polygon" | "mixed" {
   if (!geojson.features || geojson.features.length === 0) {
     return "point"; // Default fallback
   }
 
-  const firstGeom = geojson.features[0].geometry;
-  if (!firstGeom) return "point";
+  // Count geometry types
+  const typeCounts = {
+    point: 0,
+    line: 0,
+    polygon: 0,
+  };
 
-  const type = firstGeom.type;
+  geojson.features.forEach((feature) => {
+    if (!feature.geometry) return;
 
-  if (type === "Point" || type === "MultiPoint") return "point";
-  if (type === "LineString" || type === "MultiLineString") return "line";
-  if (type === "Polygon" || type === "MultiPolygon") return "polygon";
+    const type = feature.geometry.type;
 
-  return "point";
+    if (type === "Point" || type === "MultiPoint") {
+      typeCounts.point++;
+    } else if (type === "LineString" || type === "MultiLineString") {
+      typeCounts.line++;
+    } else if (type === "Polygon" || type === "MultiPolygon") {
+      typeCounts.polygon++;
+    }
+  });
+
+  // Count how many different types exist
+  const existingTypes = Object.entries(typeCounts)
+    .filter(([_, count]) => count > 0)
+    .map(([type]) => type);
+
+  // If multiple types, return "mixed"
+  if (existingTypes.length > 1) {
+    return "mixed";
+  }
+
+  // Return the dominant type
+  if (typeCounts.polygon > 0) return "polygon";
+  if (typeCounts.line > 0) return "line";
+  if (typeCounts.point > 0) return "point";
+
+  return "point"; // Fallback
 }
 
 export function getFeatureCount(geojson: GeoJSON.FeatureCollection): number {

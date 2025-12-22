@@ -39,3 +39,5 @@ next-env.d.ts
 .cursorrules
 .gitmessage
 commitlint.config.js
+
+/public/uploads/*
