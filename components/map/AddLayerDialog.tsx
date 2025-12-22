@@ -97,7 +97,7 @@ export function AddLayerDialog({
     <Sheet open={open} onOpenChange={onOpenChange} modal={true}>
       <SheetContent
         side="right"
-        className="sm:max-w-lg overflow-y-auto bg-white dark:bg-gray-800"
+        className="sm:max-w-lg overflow-y-auto bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <SheetHeader>
@@ -128,7 +128,7 @@ export function AddLayerDialog({
                   disabled={uploadMutation.isPending}
                   className="mt-2"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   Supported: GeoJSON, KML, KMZ, Shapefile (.zip), GPX, CSV
                 </p>
               </div>
@@ -157,7 +157,7 @@ export function AddLayerDialog({
                   placeholder="https://example.com/data.geojson"
                   className="mt-2"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   URL to GeoJSON file (coming soon)
                 </p>
               </div>
@@ -166,7 +166,7 @@ export function AddLayerDialog({
 
           {/* Style Configuration */}
           <div className="space-y-4 pt-4 border-t">
-            <h3 className="font-semibold text-sm">Layer Style</h3>
+            <h3 className="font-semibold text-sm text-foreground">Layer Style</h3>
 
             <div>
               <Label htmlFor="layer-name">Layer Name</Label>

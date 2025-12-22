@@ -210,10 +210,10 @@ export default function Home() {
                 onClose={() => setSelectedLocation(null)}
               >
                 <div className="min-w-[200px]">
-                  <h3 className="font-semibold text-gray-900 mb-1">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
                     {selectedLocation.name}
                   </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
                     {selectedLocation.description}
                   </p>
                 </div>

@@ -26,11 +26,11 @@ export function LayerPanel({
   const allLayers = [...predefinedLayers, ...customLayers];
 
   return (
-    <Card className="!bg-white dark:!bg-gray-800 shadow-md p-3 max-w-xs">
+    <Card className="bg-white! dark:bg-gray-800! text-gray-900! dark:text-white! shadow-md p-3 max-w-xs">
       <div className="flex items-center justify-between mb-3 pb-2 border-b">
         <div className="flex items-center gap-2">
           <Layers className="h-4 w-4" />
-          <h3 className="font-semibold text-sm">Map Layers</h3>
+          <h3 className="font-semibold text-sm text-foreground">Map Layers</h3>
         </div>
         <Button
           size="sm"
@@ -69,7 +69,7 @@ export function LayerPanel({
                 />
                 <label htmlFor={layer.id} className="flex-1 cursor-pointer">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{layer.name}</span>
+                    <span className="text-sm font-medium text-foreground">{layer.name}</span>
                     {layer.visible && !isLoading && !hasError && (
                       <Badge variant="secondary" className="text-xs">
                         Active
@@ -129,7 +129,7 @@ export function LayerPanel({
                 />
                 <label htmlFor={layer.id} className="flex-1 cursor-pointer min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-medium truncate">
+                    <span className="text-sm font-medium text-foreground truncate">
                       {layer.name}
                     </span>
                     {layer.format && (
@@ -182,7 +182,7 @@ export function LayerPanel({
 
       {/* Empty state */}
       {customLayers.length === 0 && predefinedLayers.length === 0 && (
-        <p className="text-sm text-gray-500 text-center py-4">
+        <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
           No layers available. Click + to add a custom layer.
         </p>
       )}

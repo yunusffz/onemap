@@ -27,7 +27,7 @@ export function StyleSwitcher({ currentStyle, onStyleChange }: StyleSwitcherProp
         <Button
           variant="outline"
           size="sm"
-          className="bg-white dark:bg-gray-800 shadow-md"
+          className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-md"
         >
           <MapIcon className="h-4 w-4 mr-2" />
           {currentStyleOption?.name || "Map Style"}
