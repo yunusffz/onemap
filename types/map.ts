@@ -39,4 +39,12 @@ export interface ClusterConfig {
   maxZoom: number;
 }
 
+export interface CustomLayerMetadata extends GeoJSONLayerConfig {
+  isCustom: true;
+  createdAt: number;
+  filename?: string;
+  format?: string;
+  featureCount?: number;
+}
+
 export type { MapRef, ViewState };

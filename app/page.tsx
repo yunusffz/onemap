@@ -9,8 +9,10 @@ import { StyleSwitcher } from "@/components/map/StyleSwitcher";
 import { TerrainControl } from "@/components/map/TerrainControl";
 import { ViewToggle } from "@/components/map/ViewToggle";
 import { LayerPanel } from "@/components/map/LayerPanel";
+import { AddLayerDialog } from "@/components/map/AddLayerDialog";
 import { useMap } from "@/hooks/useMap";
 import { useMapSources } from "@/hooks/useMapSources";
+import { useLayerManager } from "@/hooks/useLayerManager";
 import { DEFAULT_MAP_CONFIG } from "@/lib/mapConfig";
 import { GEOJSON_LAYERS } from "@/lib/layerConfig";
 
@@ -58,7 +60,7 @@ export default function Home() {
   const [mapStyle, setMapStyle] = useState(DEFAULT_MAP_CONFIG.mapStyle);
   const [terrainEnabled, setTerrainEnabled] = useState(false);
   const [is3DView, setIs3DView] = useState(false);
-  const [layerConfigs, setLayerConfigs] = useState(GEOJSON_LAYERS);
+  const [isAddLayerOpen, setIsAddLayerOpen] = useState(false);
 
   // Using TanStack Query to fetch locations
   const { data: locations, isLoading, error } = useQuery({
@@ -66,8 +68,17 @@ export default function Home() {
     queryFn: fetchLocations,
   });
 
-  // Manage GeoJSON layers
-  const { queries } = useMapSources(mapRef, layerConfigs);
+  // Manage GeoJSON layers (predefined + custom)
+  const {
+    predefinedLayers,
+    customLayers,
+    allLayers,
+    addCustomLayer,
+    removeCustomLayer,
+    toggleLayerVisibility,
+  } = useLayerManager(GEOJSON_LAYERS);
+
+  const { queries } = useMapSources(mapRef, allLayers);
 
   const handleMarkerClick = (location: Location) => {
     setSelectedLocation(location);
@@ -89,11 +100,7 @@ export default function Home() {
   };
 
   const handleLayerToggle = (layerId: string) => {
-    setLayerConfigs((prev) =>
-      prev.map((layer) =>
-        layer.id === layerId ? { ...layer, visible: !layer.visible } : layer
-      )
-    );
+    toggleLayerVisibility(layerId);
   };
 
   return (
@@ -167,9 +174,12 @@ export default function Home() {
             <ViewToggle is3D={is3DView} onToggle={handleViewToggle} />
             <TerrainControl enabled={terrainEnabled} onToggle={handleTerrainToggle} />
             <LayerPanel
-              layers={layerConfigs}
+              predefinedLayers={predefinedLayers}
+              customLayers={customLayers}
               queries={queries}
               onLayerToggle={handleLayerToggle}
+              onCustomLayerRemove={removeCustomLayer}
+              onAddLayerClick={() => setIsAddLayerOpen(true)}
             />
           </div>
 
@@ -212,6 +222,13 @@ export default function Home() {
           </Map>
         </main>
       </div>
+
+      {/* Add Layer Dialog */}
+      <AddLayerDialog
+        open={isAddLayerOpen}
+        onOpenChange={setIsAddLayerOpen}
+        onLayerAdd={addCustomLayer}
+      />
     </div>
   );
 }
