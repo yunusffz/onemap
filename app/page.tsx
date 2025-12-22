@@ -97,7 +97,7 @@ export default function Home() {
         {/* Sidebar Toggle Button */}
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg rounded-r-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg rounded-r-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out"
           style={{ left: isSidebarOpen ? "320px" : "0" }}
         >
           {isSidebarOpen ? (
