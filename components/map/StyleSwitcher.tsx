@@ -33,7 +33,7 @@ export function StyleSwitcher({ currentStyle, onStyleChange }: StyleSwitcherProp
           {currentStyleOption?.name || "Map Style"}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-48">
+      <DropdownMenuContent align="start" className="w-48 !bg-white dark:!bg-gray-800">
         {MAP_STYLE_OPTIONS.map((style) => (
           <DropdownMenuItem
             key={style.id}

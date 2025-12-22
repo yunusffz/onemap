@@ -14,4 +14,29 @@ export interface MapMarker {
   label?: string;
 }
 
+export interface GeoJSONLayerConfig {
+  id: string;
+  name: string;
+  description?: string;
+  sourceUrl: string;
+  geometryType: "polygon" | "line" | "point";
+  visible: boolean;
+  style: LayerStyle;
+  clustering?: ClusterConfig;
+}
+
+export interface LayerStyle {
+  color: string;
+  opacity: number;
+  strokeColor?: string;
+  strokeWidth?: number;
+  fillOpacity?: number;
+}
+
+export interface ClusterConfig {
+  enabled: boolean;
+  radius: number;
+  maxZoom: number;
+}
+
 export type { MapRef, ViewState };

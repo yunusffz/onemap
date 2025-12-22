@@ -8,8 +8,11 @@ import { MapPopup } from "@/components/map/MapPopup";
 import { StyleSwitcher } from "@/components/map/StyleSwitcher";
 import { TerrainControl } from "@/components/map/TerrainControl";
 import { ViewToggle } from "@/components/map/ViewToggle";
+import { LayerPanel } from "@/components/map/LayerPanel";
 import { useMap } from "@/hooks/useMap";
+import { useMapSources } from "@/hooks/useMapSources";
 import { DEFAULT_MAP_CONFIG } from "@/lib/mapConfig";
+import { GEOJSON_LAYERS } from "@/lib/layerConfig";
 
 interface Location {
   id: string;
@@ -55,12 +58,16 @@ export default function Home() {
   const [mapStyle, setMapStyle] = useState(DEFAULT_MAP_CONFIG.mapStyle);
   const [terrainEnabled, setTerrainEnabled] = useState(false);
   const [is3DView, setIs3DView] = useState(false);
+  const [layerConfigs, setLayerConfigs] = useState(GEOJSON_LAYERS);
 
   // Using TanStack Query to fetch locations
   const { data: locations, isLoading, error } = useQuery({
     queryKey: ["locations"],
     queryFn: fetchLocations,
   });
+
+  // Manage GeoJSON layers
+  const { queries } = useMapSources(mapRef, layerConfigs);
 
   const handleMarkerClick = (location: Location) => {
     setSelectedLocation(location);
@@ -79,6 +86,14 @@ export default function Home() {
 
   const handleTerrainToggle = () => {
     setTerrainEnabled(!terrainEnabled);
+  };
+
+  const handleLayerToggle = (layerId: string) => {
+    setLayerConfigs((prev) =>
+      prev.map((layer) =>
+        layer.id === layerId ? { ...layer, visible: !layer.visible } : layer
+      )
+    );
   };
 
   return (
@@ -151,6 +166,11 @@ export default function Home() {
             <StyleSwitcher currentStyle={mapStyle} onStyleChange={setMapStyle} />
             <ViewToggle is3D={is3DView} onToggle={handleViewToggle} />
             <TerrainControl enabled={terrainEnabled} onToggle={handleTerrainToggle} />
+            <LayerPanel
+              layers={layerConfigs}
+              queries={queries}
+              onLayerToggle={handleLayerToggle}
+            />
           </div>
 
           <Map
