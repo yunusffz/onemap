@@ -97,7 +97,7 @@ export function AddLayerDialog({
     <Sheet open={open} onOpenChange={onOpenChange} modal={true}>
       <SheetContent
         side="right"
-        className="w-full sm:max-w-lg overflow-y-auto !z-[100] bg-white dark:bg-gray-800"
+        className="sm:max-w-lg overflow-y-auto bg-white dark:bg-gray-800"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <SheetHeader>

@@ -108,7 +108,7 @@ export default function Home() {
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-sm z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">
             MapLibre Boilerplate
           </h1>
           <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
