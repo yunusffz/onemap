@@ -3,7 +3,7 @@ import type { GeoJSONLayerConfig, WMSLayerConfig, LayerConfig } from "@/types/ma
 export const PREDEFINED_LAYERS: LayerConfig[] = [
   {
     id: "sf-parks",
-    name: "San Francisco Parks",
+    name: "Map Edge",
     description: "Public parks and recreation areas",
     sourceUrl: "/api/geojson/sf-parks",
     geometryType: "polygon",

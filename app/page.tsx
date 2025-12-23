@@ -157,7 +157,7 @@ function HomeContent() {
                           className="w-3 h-3 rounded-full flex-shrink-0"
                           style={{ backgroundColor: layer.style.color }}
                         />
-                        <span className="text-sm font-medium flex-1">{layer.name}</span>
+                        <span className="text-sm font-medium flex-1  text-[20px]">{layer.name}</span>
                       </div>
                       {layer.description && (
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
