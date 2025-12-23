@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { MAP_STYLE_OPTIONS } from "@/lib/mapConfig";
 import {
   DropdownMenu,
@@ -27,14 +26,14 @@ export function StyleSwitcher({ currentStyle, onStyleChange }: StyleSwitcherProp
         <Button
           variant="ghost"
           size="sm"
-          className="w-full justify-start hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+          className="w-full justify-start"
           title="Change Map Style"
         >
           <MapIcon className="h-4 w-4 mr-2" />
           <span className="text-xs truncate">{currentStyleOption?.name || "Style"}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-48 !bg-white dark:!bg-gray-800">
+      <DropdownMenuContent align="start" className="w-48 bg-popover text-popover-foreground">
         {MAP_STYLE_OPTIONS.map((style) => (
           <DropdownMenuItem
             key={style.id}

@@ -8,6 +8,7 @@ import { TerrainControl } from "@/components/map/TerrainControl";
 import { ViewToggle } from "@/components/map/ViewToggle";
 import { LayerPanel } from "@/components/map/LayerPanel";
 import { AddLayerDialog } from "@/components/map/AddLayerDialog";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useMap } from "@/hooks/useMap";
 import { useMapSources } from "@/hooks/useMapSources";
 import { useWMSSources } from "@/hooks/useWMSSources";
@@ -109,11 +110,12 @@ function HomeContent() {
         <aside
           className={`${
             isSidebarOpen ? "w-80" : "w-0"
-          } bg-white! dark:bg-gray-800! text-gray-900! dark:text-white! shadow-lg overflow-y-auto transition-all duration-300 ease-in-out`}
+          } bg-card text-card-foreground shadow-lg overflow-y-auto transition-all duration-300 ease-in-out`}
         >
           <div className={`p-4 ${isSidebarOpen ? "" : "hidden"}`}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-foreground">Active Layers</h2>
+              <ThemeToggle />
             </div>
 
             {/* Active Layers List */}
@@ -194,7 +196,7 @@ function HomeContent() {
           {/* Compact Map Controls - Top Right */}
           <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
             {/* Compact Control Group */}
-            <div className="bg-white! dark:bg-gray-800! text-gray-900! dark:text-white! shadow-lg rounded-lg p-2 flex flex-col gap-1">
+            <div className="bg-card text-card-foreground shadow-lg rounded-lg p-2 flex flex-col gap-1">
               <StyleSwitcher currentStyle={mapStyle} onStyleChange={setMapStyle} />
               <div className="flex gap-1">
                 <ViewToggle is3D={is3DView} onToggle={handleViewToggle} />

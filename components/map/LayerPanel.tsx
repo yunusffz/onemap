@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SearchInput } from "@/components/ui/search-input";
 import { Layers, Loader2, AlertCircle, Plus, Trash2, Globe } from "lucide-react";
 import type { GeoJSONLayerConfig, CustomLayerMetadata, WMSLayerConfig } from "@/types/map";
 
@@ -29,12 +31,27 @@ export function LayerPanel({
   onWMSLayerRemove,
   onAddLayerClick,
 }: LayerPanelProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const allLayers = [...predefinedLayers, ...customLayers];
   const predefinedWMS = wmsLayers.filter((l) => !l.id.startsWith('wms-'));
   const customWMS = wmsLayers.filter((l) => l.id.startsWith('wms-'));
 
+  // Filter layers based on search query
+  const filterLayers = <T extends { name: string }>(layers: T[]) => {
+    if (!searchQuery.trim()) return layers;
+    return layers.filter((layer) =>
+      layer.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const filteredPredefinedLayers = filterLayers(predefinedLayers);
+  const filteredCustomLayers = filterLayers(customLayers);
+  const filteredPredefinedWMS = filterLayers(predefinedWMS);
+  const filteredCustomWMS = filterLayers(customWMS);
+
   return (
-    <Card className="bg-white! dark:bg-gray-800! text-gray-900! dark:text-white! shadow-md p-3 max-w-xs">
+    <Card className="shadow-md p-3 max-w-xs">
       <div className="flex items-center justify-between mb-3 pb-2 border-b">
         <div className="flex items-center gap-2">
           <Layers className="h-4 w-4" />
@@ -51,13 +68,22 @@ export function LayerPanel({
         </Button>
       </div>
 
+      {/* Search Input */}
+      <div className="mb-4">
+        <SearchInput
+          placeholder="Search layers..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
       {/* Predefined Layers */}
-      {predefinedLayers.length > 0 && (
+      {filteredPredefinedLayers.length > 0 && (
         <div className="space-y-2 mb-4">
           <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
             Base Layers
           </h4>
-          {predefinedLayers.map((layer, index) => {
+          {filteredPredefinedLayers.map((layer, index) => {
             const query = queries[index];
             const isLoading = query?.isLoading;
             const hasError = query?.isError;
@@ -111,13 +137,13 @@ export function LayerPanel({
       )}
 
       {/* WMS Layers */}
-      {predefinedWMS.length > 0 && (
+      {filteredPredefinedWMS.length > 0 && (
         <div className="space-y-2 mb-4">
           <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase flex items-center gap-1">
             <Globe className="h-3 w-3" />
             WMS Layers
           </h4>
-          {predefinedWMS.map((layer) => (
+          {filteredPredefinedWMS.map((layer) => (
             <div
               key={layer.id}
               className="flex items-start gap-2 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -154,13 +180,13 @@ export function LayerPanel({
       )}
 
       {/* Custom WMS Layers */}
-      {customWMS.length > 0 && (
+      {filteredCustomWMS.length > 0 && (
         <div className="space-y-2 mb-4">
           <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase flex items-center gap-1">
             <Globe className="h-3 w-3" />
             Custom WMS
           </h4>
-          {customWMS.map((layer) => (
+          {filteredCustomWMS.map((layer) => (
             <div
               key={layer.id}
               className="flex items-start gap-2 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -210,12 +236,12 @@ export function LayerPanel({
       )}
 
       {/* Custom Layers */}
-      {customLayers.length > 0 && (
+      {filteredCustomLayers.length > 0 && (
         <div className="space-y-2">
           <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
             Custom Layers
           </h4>
-          {customLayers.map((layer, index) => {
+          {filteredCustomLayers.map((layer, index) => {
             const queryIndex = predefinedLayers.length + index;
             const query = queries[queryIndex];
             const isLoading = query?.isLoading;
@@ -288,9 +314,12 @@ export function LayerPanel({
       )}
 
       {/* Empty state */}
-      {customLayers.length === 0 && predefinedLayers.length === 0 && wmsLayers.length === 0 && (
+      {filteredCustomLayers.length === 0 &&
+       filteredPredefinedLayers.length === 0 &&
+       filteredPredefinedWMS.length === 0 &&
+       filteredCustomWMS.length === 0 && (
         <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
-          No layers available. Click + to add a custom layer.
+          {searchQuery.trim() ? 'No layers match your search.' : 'No layers available. Click + to add a custom layer.'}
         </p>
       )}
     </Card>
