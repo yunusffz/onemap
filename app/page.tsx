@@ -13,9 +13,10 @@ import { useMapSources } from "@/hooks/useMapSources";
 import { useWMSSources } from "@/hooks/useWMSSources";
 import { useLayerManager } from "@/hooks/useLayerManager";
 import { DEFAULT_MAP_CONFIG } from "@/lib/mapConfig";
-import { GEOJSON_LAYERS } from "@/lib/layerConfig";
+import { PREDEFINED_LAYERS, GEOJSON_LAYERS } from "@/lib/layerConfig";
 import { parseURLMapState } from "@/lib/urlParser";
 import type { WMSLayerConfig } from "@/types/map";
+import { isWMSLayer, isGeoJSONLayer } from "@/types/map";
 
 function HomeContent() {
   const { mapRef, toggleView } = useMap();
@@ -28,7 +29,9 @@ function HomeContent() {
   const [isLayerPanelOpen, setIsLayerPanelOpen] = useState(true);
 
   // Parse URL parameters for WMS layers and view state
-  const [wmsLayers, setWmsLayers] = useState<WMSLayerConfig[]>([]);
+  // Initialize with predefined WMS layers
+  const predefinedWMSLayers = PREDEFINED_LAYERS.filter(isWMSLayer);
+  const [wmsLayers, setWmsLayers] = useState<WMSLayerConfig[]>(predefinedWMSLayers);
   const [initialViewState, setInitialViewState] = useState({
     longitude: 107.6191,
     latitude: -6.9175,
@@ -39,7 +42,8 @@ function HomeContent() {
     const urlState = parseURLMapState(searchParams);
 
     if (urlState.wmsLayers.length > 0) {
-      setWmsLayers(urlState.wmsLayers);
+      // Combine predefined and URL WMS layers
+      setWmsLayers([...predefinedWMSLayers, ...urlState.wmsLayers]);
     }
 
     if (urlState.viewState) {
@@ -83,6 +87,18 @@ function HomeContent() {
       visible: true,
     };
     setWmsLayers((prev) => [...prev, newLayer]);
+  };
+
+  const handleWMSLayerToggle = (layerId: string) => {
+    setWmsLayers((prev) =>
+      prev.map((layer) =>
+        layer.id === layerId ? { ...layer, visible: !layer.visible } : layer
+      )
+    );
+  };
+
+  const handleWMSLayerRemove = (layerId: string) => {
+    setWmsLayers((prev) => prev.filter((layer) => layer.id !== layerId));
   };
 
   return (
@@ -203,9 +219,12 @@ function HomeContent() {
               <LayerPanel
                 predefinedLayers={predefinedLayers}
                 customLayers={customLayers}
+                wmsLayers={wmsLayers}
                 queries={queries}
                 onLayerToggle={handleLayerToggle}
                 onCustomLayerRemove={removeCustomLayer}
+                onWMSLayerToggle={handleWMSLayerToggle}
+                onWMSLayerRemove={handleWMSLayerRemove}
                 onAddLayerClick={() => setIsAddLayerOpen(true)}
               />
             )}

@@ -1,6 +1,6 @@
-import type { GeoJSONLayerConfig } from "@/types/map";
+import type { GeoJSONLayerConfig, WMSLayerConfig, LayerConfig } from "@/types/map";
 
-export const GEOJSON_LAYERS: GeoJSONLayerConfig[] = [
+export const PREDEFINED_LAYERS: LayerConfig[] = [
   {
     id: "sf-parks",
     name: "San Francisco Parks",
@@ -17,33 +17,21 @@ export const GEOJSON_LAYERS: GeoJSONLayerConfig[] = [
     },
   },
   {
-    id: "sf-bike-lanes",
-    name: "SF Bike Lanes",
-    description: "Bicycle routes and lanes",
-    sourceUrl: "/api/geojson/sf-bike-lanes",
-    geometryType: "line",
+    id: "jabar-cat-kepmen-ar",
+    name: "CAT Jabar Kepmen AR",
+    description: "Peta CAT Jawa Barat (Kepmen AR)",
+    baseUrl: "https://geoserver.jabarprov.go.id/geoserver/desdm/wms",
+    layers: "desdm:cat_jabar_kepmen_ar",
+    version: "1.1.0",
+    format: "image/png",
+    transparent: true,
     visible: false,
-    style: {
-      color: "#3b82f6",
-      opacity: 0.8,
-      strokeWidth: 3,
-    },
-  },
-  {
-    id: "sf-transit",
-    name: "Transit Stops",
-    description: "Public transit stations",
-    sourceUrl: "/api/geojson/sf-transit",
-    geometryType: "point",
-    visible: false,
-    style: {
-      color: "#ef4444",
-      opacity: 0.8,
-    },
-    clustering: {
-      enabled: true,
-      radius: 50,
-      maxZoom: 14,
-    },
-  },
+    opacity: 0.8,
+    srs: "EPSG:32748",
+  } as WMSLayerConfig,
 ];
+
+// For backward compatibility
+export const GEOJSON_LAYERS = PREDEFINED_LAYERS.filter(
+  (layer): layer is GeoJSONLayerConfig => 'sourceUrl' in layer
+);
