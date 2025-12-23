@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Map } from "@/components/map/Map";
 import { StyleSwitcher } from "@/components/map/StyleSwitcher";
 import { TerrainControl } from "@/components/map/TerrainControl";
@@ -9,18 +10,42 @@ import { LayerPanel } from "@/components/map/LayerPanel";
 import { AddLayerDialog } from "@/components/map/AddLayerDialog";
 import { useMap } from "@/hooks/useMap";
 import { useMapSources } from "@/hooks/useMapSources";
+import { useWMSSources } from "@/hooks/useWMSSources";
 import { useLayerManager } from "@/hooks/useLayerManager";
 import { DEFAULT_MAP_CONFIG } from "@/lib/mapConfig";
 import { GEOJSON_LAYERS } from "@/lib/layerConfig";
+import { parseURLMapState } from "@/lib/urlParser";
+import type { WMSLayerConfig } from "@/types/map";
 
-export default function Home() {
+function HomeContent() {
   const { mapRef, toggleView } = useMap();
+  const searchParams = useSearchParams();
   const [mapStyle, setMapStyle] = useState(DEFAULT_MAP_CONFIG.mapStyle);
   const [terrainEnabled, setTerrainEnabled] = useState(false);
   const [is3DView, setIs3DView] = useState(false);
   const [isAddLayerOpen, setIsAddLayerOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isLayerPanelOpen, setIsLayerPanelOpen] = useState(true);
+
+  // Parse URL parameters for WMS layers and view state
+  const [wmsLayers, setWmsLayers] = useState<WMSLayerConfig[]>([]);
+  const [initialViewState, setInitialViewState] = useState({
+    longitude: 107.6191,
+    latitude: -6.9175,
+    zoom: 12,
+  });
+
+  useEffect(() => {
+    const urlState = parseURLMapState(searchParams);
+
+    if (urlState.wmsLayers.length > 0) {
+      setWmsLayers(urlState.wmsLayers);
+    }
+
+    if (urlState.viewState) {
+      setInitialViewState(urlState.viewState);
+    }
+  }, [searchParams]);
 
   // Manage GeoJSON layers (predefined + custom)
   const {
@@ -34,6 +59,9 @@ export default function Home() {
 
   const { queries } = useMapSources(mapRef, allLayers);
 
+  // Load WMS layers from URL
+  useWMSSources(mapRef, wmsLayers);
+
   const handleViewToggle = () => {
     const newIs3D = !is3DView;
     setIs3DView(newIs3D);
@@ -46,6 +74,15 @@ export default function Home() {
 
   const handleLayerToggle = (layerId: string) => {
     toggleLayerVisibility(layerId);
+  };
+
+  const handleWMSLayerAdd = (wmsConfig: Omit<WMSLayerConfig, "id" | "visible">) => {
+    const newLayer: WMSLayerConfig = {
+      ...wmsConfig,
+      id: `wms-${Date.now()}`,
+      visible: true,
+    };
+    setWmsLayers((prev) => [...prev, newLayer]);
   };
 
   return (
@@ -65,30 +102,55 @@ export default function Home() {
 
             {/* Active Layers List */}
             <div className="space-y-2">
-              {allLayers.filter(layer => layer.visible).length === 0 ? (
+              {allLayers.filter(layer => layer.visible).length === 0 && wmsLayers.filter(layer => layer.visible).length === 0 ? (
                 <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
                   No active layers
                 </p>
               ) : (
-                allLayers.filter(layer => layer.visible).map((layer) => (
-                  <div
-                    key={layer.id}
-                    className="p-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-3 h-3 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: layer.style.color }}
-                      />
-                      <span className="text-sm font-medium flex-1">{layer.name}</span>
-                    </div>
-                    {layer.description && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {layer.description}
+                <>
+                  {/* WMS Layers */}
+                  {wmsLayers.filter(layer => layer.visible).map((layer) => (
+                    <div
+                      key={layer.id}
+                      className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full flex-shrink-0 bg-blue-500" />
+                        <span className="text-sm font-medium flex-1">{layer.name}</span>
+                        <span className="text-xs text-blue-600 dark:text-blue-400 font-mono">WMS</span>
+                      </div>
+                      {layer.description && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          {layer.description}
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 font-mono break-all">
+                        {layer.layers}
                       </p>
-                    )}
-                  </div>
-                ))
+                    </div>
+                  ))}
+
+                  {/* GeoJSON Layers */}
+                  {allLayers.filter(layer => layer.visible).map((layer) => (
+                    <div
+                      key={layer.id}
+                      className="p-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-3 h-3 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: layer.style.color }}
+                        />
+                        <span className="text-sm font-medium flex-1">{layer.name}</span>
+                      </div>
+                      {layer.description && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          {layer.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </>
               )}
             </div>
           </div>
@@ -151,11 +213,7 @@ export default function Home() {
 
           <Map
             mapRef={mapRef}
-            initialViewState={{
-              longitude: 107.6191,
-              latitude: -6.9175,
-              zoom: 12,
-            }}
+            initialViewState={initialViewState}
             mapStyle={mapStyle}
             terrain={terrainEnabled}
             className="w-full h-full"
@@ -168,7 +226,16 @@ export default function Home() {
         open={isAddLayerOpen}
         onOpenChange={setIsAddLayerOpen}
         onLayerAdd={addCustomLayer}
+        onWMSLayerAdd={handleWMSLayerAdd}
       />
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

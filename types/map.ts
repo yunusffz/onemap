@@ -25,6 +25,31 @@ export interface GeoJSONLayerConfig {
   clustering?: ClusterConfig;
 }
 
+export interface WMSLayerConfig {
+  id: string;
+  name: string;
+  description?: string;
+  baseUrl: string;
+  layers: string;
+  version?: string;
+  format?: string;
+  transparent?: boolean;
+  visible: boolean;
+  opacity?: number;
+  attribution?: string;
+  srs?: string; // Coordinate reference system (e.g., EPSG:3857, EPSG:4326)
+}
+
+export type LayerConfig = GeoJSONLayerConfig | WMSLayerConfig;
+
+export function isWMSLayer(layer: LayerConfig): layer is WMSLayerConfig {
+  return 'baseUrl' in layer && 'layers' in layer;
+}
+
+export function isGeoJSONLayer(layer: LayerConfig): layer is GeoJSONLayerConfig {
+  return 'sourceUrl' in layer && 'geometryType' in layer;
+}
+
 export interface LayerStyle {
   color: string;
   opacity: number;
