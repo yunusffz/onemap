@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
-import { Layers, Loader2, AlertCircle, Plus, Trash2, Globe } from "lucide-react";
+import { Layers, Loader2, AlertCircle, Plus, Trash2, Globe, ChevronRight, ChevronLeft } from "lucide-react";
 import type { GeoJSONLayerConfig, CustomLayerMetadata, WMSLayerConfig } from "@/types/map";
 
 interface LayerPanelProps {
@@ -32,6 +32,7 @@ export function LayerPanel({
   onAddLayerClick,
 }: LayerPanelProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const allLayers = [...predefinedLayers, ...customLayers];
   const predefinedWMS = wmsLayers.filter((l) => !l.id.startsWith('wms-'));
@@ -50,6 +51,32 @@ export function LayerPanel({
   const filteredPredefinedWMS = filterLayers(predefinedWMS);
   const filteredCustomWMS = filterLayers(customWMS);
 
+  // Collapsed sidebar view
+  if (!isExpanded) {
+    return (
+      <Card className="shadow-md p-3 w-16 bg-card flex flex-col items-center gap-3">
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setIsExpanded(true)}
+          className="h-10 w-10 p-0 rounded-full bg-blue-50 dark:bg-blue-950 hover:bg-blue-100 dark:hover:bg-blue-900"
+          title="Open Layers Panel"
+        >
+          <Layers className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        </Button>
+        <Button
+          size="sm"
+          onClick={() => setIsExpanded(true)}
+          className="h-10 w-10 p-0 bg-blue-600 hover:bg-blue-700 text-white"
+          title="Expand Panel"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </Button>
+      </Card>
+    );
+  }
+
+  // Expanded panel view
   return (
     <Card className="shadow-md p-3 max-w-xs bg-card">
       <div className="flex items-center justify-between mb-3 pb-2 border-b">
@@ -57,15 +84,26 @@ export function LayerPanel({
           <Layers className="h-4 w-4" />
           <h3 className="font-semibold text-sm text-foreground">Map Layers</h3>
         </div>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={onAddLayerClick}
-          className="h-7 w-7 p-0"
-          title="Add Custom Layer"
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={onAddLayerClick}
+            className="h-7 w-7 p-0"
+            title="Add Custom Layer"
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setIsExpanded(false)}
+            className="h-7 w-7 p-0"
+            title="Collapse Panel"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       {/* Search Input */}

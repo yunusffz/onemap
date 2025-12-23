@@ -105,21 +105,37 @@ function HomeContent() {
   return (
     <div className="flex h-screen">
       {/* Main Content */}
-      <div className="flex-1 flex relative">
-        {/* Collapsible Sidebar */}
+      <div className="flex-1 relative">
+        {/* Floating Collapsible Sidebar */}
         <aside
           className={`${
-            isSidebarOpen ? "w-80" : "w-0"
-          } bg-card text-card-foreground shadow-lg overflow-y-auto transition-all duration-300 ease-in-out`}
+            isSidebarOpen ? "w-80" : "w-16"
+          } absolute left-0 top-0 bottom-0 bg-card text-card-foreground shadow-lg overflow-hidden transition-[width] duration-500 ease-in-out flex flex-col z-20`}
         >
-          <div className={`p-4 ${isSidebarOpen ? "" : "hidden"}`}>
-            <div className="flex items-center justify-between mb-4">
+          {/* Expanded view */}
+          <div
+            className={`absolute inset-0 p-4 overflow-y-auto flex flex-col transition-opacity duration-300 ${
+              isSidebarOpen ? "opacity-100 pointer-events-auto delay-200" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-4 whitespace-nowrap">
               <h2 className="text-lg font-semibold text-foreground">Active Layers</h2>
-              <ThemeToggle />
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <button
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors shrink-0"
+                  title="Collapse sidebar"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             {/* Active Layers List */}
-            <div className="space-y-2">
+            <div className="space-y-2 overflow-y-auto">
               {allLayers.filter(layer => layer.visible).length === 0 && wmsLayers.filter(layer => layer.visible).length === 0 ? (
                 <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
                   No active layers
@@ -133,9 +149,9 @@ function HomeContent() {
                       className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700"
                     >
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full flex-shrink-0 bg-blue-500" />
-                        <span className="text-sm font-medium flex-1">{layer.name}</span>
-                        <span className="text-xs text-blue-600 dark:text-blue-400 font-mono">WMS</span>
+                        <div className="w-3 h-3 rounded-full shrink-0 bg-blue-500" />
+                        <span className="text-sm font-medium flex-1 min-w-0 truncate">{layer.name}</span>
+                        <span className="text-xs text-blue-600 dark:text-blue-400 font-mono shrink-0">WMS</span>
                       </div>
                       {layer.description && (
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -156,10 +172,10 @@ function HomeContent() {
                     >
                       <div className="flex items-center gap-2">
                         <div
-                          className="w-3 h-3 rounded-full flex-shrink-0"
+                          className="w-3 h-3 rounded-full shrink-0"
                           style={{ backgroundColor: layer.style.color }}
                         />
-                        <span className="text-sm font-medium flex-1  text-[20px]">{layer.name}</span>
+                        <span className="text-sm font-medium flex-1 text-[20px] min-w-0 truncate">{layer.name}</span>
                       </div>
                       {layer.description && (
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -172,27 +188,38 @@ function HomeContent() {
               )}
             </div>
           </div>
+
+          {/* Collapsed view - icons only */}
+          <div
+            className={`absolute inset-0 p-3 flex flex-col items-center gap-3 mt-4 transition-opacity duration-300 ${
+              isSidebarOpen ? "opacity-0 pointer-events-none" : "opacity-100 pointer-events-auto delay-200"
+            }`}
+          >
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="h-10 w-10 rounded-full bg-blue-50 dark:bg-blue-950 hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors flex items-center justify-center shrink-0"
+              title="Active Layers"
+              aria-label="Show active layers"
+            >
+              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="h-10 w-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors flex items-center justify-center shrink-0"
+              title="Expand sidebar"
+              aria-label="Expand sidebar"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
         </aside>
 
-        {/* Sidebar Toggle Button */}
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg rounded-r-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out"
-          style={{ left: isSidebarOpen ? "320px" : "0" }}
-        >
-          {isSidebarOpen ? (
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          ) : (
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          )}
-        </button>
-
         {/* Map */}
-        <main className="flex-1 relative">
+        <main className="w-full h-full relative">
           {/* Compact Map Controls - Top Right */}
           <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
             {/* Compact Control Group */}
