@@ -22,6 +22,10 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
+  /* Custom Color */
+  --color-gray-700: oklch(0.7155 0 0);
+
+
   --animate-in: fade-in 0.3s ease-in-out;
   --animate-out: fade-out 0.3s ease-in-out;
 

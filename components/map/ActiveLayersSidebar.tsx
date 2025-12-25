@@ -1,6 +1,7 @@
 "use client";
 
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Logo } from "@/components/Logo";
 import type { GeoJSONLayerConfig, WMSLayerConfig } from "@/types/map";
 
 interface ActiveLayersSidebarProps {
@@ -20,16 +21,26 @@ export function ActiveLayersSidebar({
     <aside
       className={`${
         isOpen ? "w-80" : "w-16"
-      } absolute left-0 top-0 bottom-0 bg-card text-card-foreground shadow-lg overflow-hidden transition-[width] duration-500 ease-in-out flex flex-col z-20`}
+      } absolute left-5 top-5 bottom-5 bg-card text-card-foreground shadow-lg overflow-hidden transition-[width] duration-500 ease-in-out flex flex-col z-20 `}
     >
       {/* Expanded view */}
       <div
         className={`absolute inset-0 p-4 overflow-y-auto flex flex-col transition-opacity duration-300 ${
-          isOpen ? "opacity-100 pointer-events-auto delay-200" : "opacity-0 pointer-events-none"
+          isOpen
+            ? "opacity-100 pointer-events-auto delay-200"
+            : "opacity-0 pointer-events-none"
         }`}
       >
+        <div
+          className={`flex  transition-opacity duration-300 gap-2 items-center`}
+        >
+          <Logo size={24} className="text-primary" />
+          <div className="text-xl text-primary">Map Edge</div>
+        </div>
         <div className="flex items-center justify-between mb-4 whitespace-nowrap">
-          <h2 className="text-lg font-semibold text-foreground">Active Layers</h2>
+          <h2 className="text-lg font-semibold text-foreground">
+            Active Layers
+          </h2>
           <div className="flex items-center gap-2">
             <ThemeToggle />
           </div>
@@ -51,8 +62,12 @@ export function ActiveLayersSidebar({
                 >
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full shrink-0 bg-blue-500" />
-                    <span className="text-sm font-medium flex-1 min-w-0 truncate">{layer.name}</span>
-                    <span className="text-xs text-blue-600 dark:text-blue-400 font-mono shrink-0">WMS</span>
+                    <span className="text-sm font-medium flex-1 min-w-0 truncate">
+                      {layer.name}
+                    </span>
+                    <span className="text-xs text-blue-600 dark:text-blue-400 font-mono shrink-0">
+                      WMS
+                    </span>
                   </div>
                   {layer.description && (
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -76,7 +91,9 @@ export function ActiveLayersSidebar({
                       className="w-3 h-3 rounded-full shrink-0"
                       style={{ backgroundColor: layer.style.color }}
                     />
-                    <span className="text-sm font-medium flex-1 text-[20px] min-w-0 truncate">{layer.name}</span>
+                    <span className="text-sm font-medium flex-1 text-[20px] min-w-0 truncate">
+                      {layer.name}
+                    </span>
                   </div>
                   {layer.description && (
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -88,6 +105,16 @@ export function ActiveLayersSidebar({
             </>
           )}
         </div>
+      </div>
+
+      <div
+        className={`absolute inset-0 flex  transition-opacity duration-300 p-5 ${
+          !isOpen
+            ? "opacity-100 pointer-events-auto delay-200"
+            : "opacity-0 pointer-events-none"
+        }`}
+      >
+        <Logo size={24} className="text-primary" />
       </div>
     </aside>
   );
