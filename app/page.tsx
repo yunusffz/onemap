@@ -11,11 +11,10 @@ import { LayerPanelToggle } from "@/components/map/LayerPanelToggle";
 import { useMap } from "@/hooks/useMap";
 import { useMapSources } from "@/hooks/useMapSources";
 import { useWMSSources } from "@/hooks/useWMSSources";
-import { useLayerManager } from "@/hooks/useLayerManager";
+import { useActiveLayers } from "@/hooks/useActiveLayers";
 import { DEFAULT_MAP_CONFIG } from "@/lib/mapConfig";
 import { PREDEFINED_LAYERS, GEOJSON_LAYERS } from "@/lib/layerConfig";
 import { parseURLMapState } from "@/lib/urlParser";
-import type { WMSLayerConfig } from "@/types/map";
 import { isWMSLayer } from "@/types/map";
 
 function HomeContent() {
@@ -27,11 +26,10 @@ function HomeContent() {
   const [isAddLayerOpen, setIsAddLayerOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isLayerPanelOpen, setIsLayerPanelOpen] = useState(true);
+  const [isMapMounted, setIsMapMounted] = useState(false);
 
   // Parse URL parameters for WMS layers and view state
-  // Initialize with predefined WMS layers
   const predefinedWMSLayers = PREDEFINED_LAYERS.filter(isWMSLayer);
-  const [wmsLayers, setWmsLayers] = useState<WMSLayerConfig[]>(predefinedWMSLayers);
   const [initialViewState, setInitialViewState] = useState({
     longitude: 107.6191,
     latitude: -6.9175,
@@ -41,30 +39,43 @@ function HomeContent() {
   useEffect(() => {
     const urlState = parseURLMapState(searchParams);
 
-    if (urlState.wmsLayers.length > 0) {
-      // Combine predefined and URL WMS layers
-      setWmsLayers([...predefinedWMSLayers, ...urlState.wmsLayers]);
-    }
-
     if (urlState.viewState) {
       setInitialViewState(urlState.viewState);
     }
   }, [searchParams]);
 
-  // Manage GeoJSON layers (predefined + custom)
+  // Single source of truth for all active layers
   const {
-    predefinedLayers,
-    customLayers,
-    allLayers,
+    predefinedGeoJSON,
+    customGeoJSON,
+    allGeoJSONLayers,
+    activeGeoJSONLayers,
     addCustomLayer,
     removeCustomLayer,
-    toggleLayerVisibility,
-  } = useLayerManager(GEOJSON_LAYERS);
+    toggleGeoJSONLayerVisibility,
+    wmsLayers,
+    activeWMSLayers,
+    addWMSLayer,
+    toggleWMSLayerVisibility,
+    removeWMSLayer,
+  } = useActiveLayers({
+    predefinedGeoJSONLayers: GEOJSON_LAYERS,
+    predefinedWMSLayers,
+    isMounted: isMapMounted,
+  });
 
-  const { queries } = useMapSources(mapRef, allLayers);
+  const { queries } = useMapSources(mapRef, allGeoJSONLayers);
 
-  // Load WMS layers from URL
+  // Load WMS layers
   useWMSSources(mapRef, wmsLayers);
+
+  // Track map mount/unmount
+  useEffect(() => {
+    setIsMapMounted(true);
+    return () => {
+      setIsMapMounted(false);
+    };
+  }, []);
 
   const handleViewToggle = () => {
     const newIs3D = !is3DView;
@@ -76,31 +87,6 @@ function HomeContent() {
     setTerrainEnabled(!terrainEnabled);
   };
 
-  const handleLayerToggle = (layerId: string) => {
-    toggleLayerVisibility(layerId);
-  };
-
-  const handleWMSLayerAdd = (wmsConfig: Omit<WMSLayerConfig, "id" | "visible">) => {
-    const newLayer: WMSLayerConfig = {
-      ...wmsConfig,
-      id: `wms-${Date.now()}`,
-      visible: true,
-    };
-    setWmsLayers((prev) => [...prev, newLayer]);
-  };
-
-  const handleWMSLayerToggle = (layerId: string) => {
-    setWmsLayers((prev) =>
-      prev.map((layer) =>
-        layer.id === layerId ? { ...layer, visible: !layer.visible } : layer
-      )
-    );
-  };
-
-  const handleWMSLayerRemove = (layerId: string) => {
-    setWmsLayers((prev) => prev.filter((layer) => layer.id !== layerId));
-  };
-
   return (
     <div className="flex h-screen">
       {/* Main Content */}
@@ -108,9 +94,8 @@ function HomeContent() {
         {/* Active Layers Sidebar */}
         <ActiveLayersSidebar
           isOpen={isSidebarOpen}
-          onToggle={setIsSidebarOpen}
-          geojsonLayers={allLayers.filter(layer => layer.visible)}
-          wmsLayers={wmsLayers.filter(layer => layer.visible)}
+          geojsonLayers={activeGeoJSONLayers}
+          wmsLayers={activeWMSLayers}
         />
 
         {/* Sidebar Toggle Buttons */}
@@ -136,14 +121,14 @@ function HomeContent() {
           <LayerPanelToggle
             isOpen={isLayerPanelOpen}
             onToggle={setIsLayerPanelOpen}
-            predefinedLayers={predefinedLayers}
-            customLayers={customLayers}
+            predefinedLayers={predefinedGeoJSON}
+            customLayers={customGeoJSON}
             wmsLayers={wmsLayers}
             queries={queries}
-            onLayerToggle={handleLayerToggle}
+            onLayerToggle={toggleGeoJSONLayerVisibility}
             onCustomLayerRemove={removeCustomLayer}
-            onWMSLayerToggle={handleWMSLayerToggle}
-            onWMSLayerRemove={handleWMSLayerRemove}
+            onWMSLayerToggle={toggleWMSLayerVisibility}
+            onWMSLayerRemove={removeWMSLayer}
             onAddLayerClick={() => setIsAddLayerOpen(true)}
           />
 
@@ -162,7 +147,7 @@ function HomeContent() {
         open={isAddLayerOpen}
         onOpenChange={setIsAddLayerOpen}
         onLayerAdd={addCustomLayer}
-        onWMSLayerAdd={handleWMSLayerAdd}
+        onWMSLayerAdd={addWMSLayer}
       />
     </div>
   );

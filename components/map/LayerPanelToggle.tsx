@@ -1,7 +1,11 @@
 "use client";
 
 import { LayerPanel } from "@/components/map/LayerPanel";
-import type { GeoJSONLayerConfig, WMSLayerConfig, CustomLayerMetadata } from "@/types/map";
+import type {
+  GeoJSONLayerConfig,
+  WMSLayerConfig,
+  CustomLayerMetadata,
+} from "@/types/map";
 
 interface LayerPanelToggleProps {
   isOpen: boolean;
@@ -31,14 +35,24 @@ export function LayerPanelToggle({
   onAddLayerClick,
 }: LayerPanelToggleProps) {
   return (
-    <div className="absolute top-4 left-4 z-10">
+    <div className="absolute top-4 left-30 z-10">
       <button
         onClick={() => onToggle(!isOpen)}
         className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg rounded-lg p-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors mb-2"
         title="Toggle Layers Panel"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 6h16M4 12h16M4 18h16"
+          />
         </svg>
       </button>
 

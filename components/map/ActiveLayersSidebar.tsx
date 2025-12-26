@@ -4,20 +4,18 @@ import { Logo } from "@/components/Logo";
 import type { GeoJSONLayerConfig, WMSLayerConfig } from "@/types/map";
 import { SearchInput } from "../ui/search-input";
 import { Button } from "../ui/button";
-import { ArrowRight, MapPin, Ruler, Layers } from "@/components/icons";
+import { ArrowRight, MapPin, Ruler } from "@/components/icons";
 import { ButtonGroup } from "../ui/button-group";
 import { Polygon } from "../icons/custom";
 
 interface ActiveLayersSidebarProps {
   isOpen: boolean;
-  onToggle: (open: boolean) => void;
   geojsonLayers: GeoJSONLayerConfig[];
   wmsLayers: WMSLayerConfig[];
 }
 
 export function ActiveLayersSidebar({
   isOpen,
-  onToggle,
   geojsonLayers,
   wmsLayers,
 }: ActiveLayersSidebarProps) {
@@ -72,12 +70,14 @@ export function ActiveLayersSidebar({
             </Button>
           </ButtonGroup>
 
-          <Button className="rounded-none w-full" variant={"outline"}>
+          <Button
+            className="rounded-none w-full cursor-pointer"
+            variant={"outline"}
+          >
             Reset
           </Button>
         </div>
 
-        {/* Active Layers List */}
         <div className="space-y-2 overflow-y-auto">
           {geojsonLayers.length === 0 && wmsLayers.length === 0 ? (
             <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">

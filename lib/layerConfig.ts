@@ -1,4 +1,8 @@
-import type { GeoJSONLayerConfig, WMSLayerConfig, LayerConfig } from "@/types/map";
+import type {
+  GeoJSONLayerConfig,
+  WMSLayerConfig,
+  LayerConfig,
+} from "@/types/map";
 
 export const PREDEFINED_LAYERS: LayerConfig[] = [
   {
@@ -33,5 +37,5 @@ export const PREDEFINED_LAYERS: LayerConfig[] = [
 
 // For backward compatibility
 export const GEOJSON_LAYERS = PREDEFINED_LAYERS.filter(
-  (layer): layer is GeoJSONLayerConfig => 'sourceUrl' in layer
+  (layer): layer is GeoJSONLayerConfig => "sourceUrl" in layer
 );
