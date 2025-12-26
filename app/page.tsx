@@ -8,10 +8,12 @@ import { ActiveLayersSidebar } from "@/components/map/ActiveLayersSidebar";
 import { SidebarToggleButtons } from "@/components/map/SidebarToggleButtons";
 import { MapControls } from "@/components/map/MapControls";
 import { LayerPanelToggle } from "@/components/map/LayerPanelToggle";
+import { DrawControl } from "@/components/map/DrawControl";
 import { useMap } from "@/hooks/useMap";
 import { useMapSources } from "@/hooks/useMapSources";
 import { useWMSSources } from "@/hooks/useWMSSources";
 import { useActiveLayers } from "@/hooks/useActiveLayers";
+import { useDrawing } from "@/hooks/useDrawing";
 import { DEFAULT_MAP_CONFIG } from "@/lib/mapConfig";
 import { PREDEFINED_LAYERS, GEOJSON_LAYERS } from "@/lib/layerConfig";
 import { parseURLMapState } from "@/lib/urlParser";
@@ -69,6 +71,10 @@ function HomeContent() {
   // Load WMS layers
   useWMSSources(mapRef, wmsLayers);
 
+  // Drawing functionality
+  const { mode, setDrawMode, addMeasurement, removeMeasurement, clearAll } =
+    useDrawing();
+
   // Track map mount/unmount
   useEffect(() => {
     setIsMapMounted(true);
@@ -96,6 +102,9 @@ function HomeContent() {
           isOpen={isSidebarOpen}
           geojsonLayers={activeGeoJSONLayers}
           wmsLayers={activeWMSLayers}
+          drawMode={mode}
+          onDrawModeChange={setDrawMode}
+          onReset={clearAll}
         />
 
         {/* Sidebar Toggle Buttons */}
@@ -138,7 +147,14 @@ function HomeContent() {
             mapStyle={mapStyle}
             terrain={terrainEnabled}
             className="w-full h-full"
-          />
+          >
+            <DrawControl
+              mapRef={mapRef}
+              mode={mode}
+              onMeasurement={addMeasurement}
+              onDelete={removeMeasurement}
+            />
+          </Map>
         </main>
       </div>
 

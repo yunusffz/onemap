@@ -2,6 +2,7 @@
 
 import { Logo } from "@/components/Logo";
 import type { GeoJSONLayerConfig, WMSLayerConfig } from "@/types/map";
+import type { DrawMode } from "@/hooks/useDrawing";
 import { SearchInput } from "../ui/search-input";
 import { Button } from "../ui/button";
 import { ArrowRight, MapPin, Ruler } from "@/components/icons";
@@ -12,12 +13,18 @@ interface ActiveLayersSidebarProps {
   isOpen: boolean;
   geojsonLayers: GeoJSONLayerConfig[];
   wmsLayers: WMSLayerConfig[];
+  drawMode?: DrawMode;
+  onDrawModeChange?: (mode: DrawMode) => void;
+  onReset?: () => void;
 }
 
 export function ActiveLayersSidebar({
   isOpen,
   geojsonLayers,
   wmsLayers,
+  drawMode,
+  onDrawModeChange,
+  onReset,
 }: ActiveLayersSidebarProps) {
   return (
     <aside
@@ -51,20 +58,29 @@ export function ActiveLayersSidebar({
         <div className="py-5 flex-col gap-5">
           <ButtonGroup className="rounded-none mb-5 flex w-full">
             <Button
-              className="rounded-none bg-gray-300 flex-1 border-0 shadow-none cursor-pointer hover:text-primary transition-colors"
+              className={`rounded-none flex-1 border-0 shadow-none cursor-pointer hover:text-primary transition-colors ${
+                drawMode === "pin" ? "bg-primary text-white" : "bg-gray-300"
+              }`}
               variant={"secondary"}
+              onClick={() => onDrawModeChange?.("pin")}
             >
               <MapPin className="w-5 h-5" />
             </Button>
             <Button
-              className="rounded-none bg-gray-300 flex-1 border-0 shadow-none cursor-pointer hover:text-primary transition-colors"
+              className={`rounded-none flex-1 border-0 shadow-none cursor-pointer hover:text-primary transition-colors ${
+                drawMode === "ruler" ? "bg-primary text-white" : "bg-gray-300"
+              }`}
               variant={"secondary"}
+              onClick={() => onDrawModeChange?.("ruler")}
             >
               <Ruler className="w-5 h-5" />
             </Button>
             <Button
-              className="rounded-none bg-gray-300 flex-1 border-0 shadow-none cursor-pointer hover:text-primary transition-colors"
+              className={`rounded-none flex-1 border-0 shadow-none cursor-pointer hover:text-primary transition-colors ${
+                drawMode === "polygon" ? "bg-primary text-white" : "bg-gray-300"
+              }`}
               variant={"secondary"}
+              onClick={() => onDrawModeChange?.("polygon")}
             >
               <Polygon />
             </Button>
@@ -73,6 +89,7 @@ export function ActiveLayersSidebar({
           <Button
             className="rounded-none w-full cursor-pointer"
             variant={"outline"}
+            onClick={onReset}
           >
             Reset
           </Button>

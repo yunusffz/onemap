@@ -202,3 +202,25 @@
 .maplibregl-map {
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Mapbox Draw Custom Styles */
+.mapboxgl-ctrl-group button,
+.maplibregl-ctrl-group button {
+  background-color: white !important;
+}
+
+/* Measurement Popup Styles */
+.measurement-popup .maplibregl-popup-content {
+  background: white;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.measurement-popup .maplibregl-popup-tip {
+  border-top-color: white;
+}
+
+/* Drawing cursor styles */
+.maplibregl-canvas-container.maplibregl-interactive {
+  cursor: crosshair;
+}
