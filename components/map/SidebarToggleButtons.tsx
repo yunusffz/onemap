@@ -1,5 +1,7 @@
 "use client";
 
+import { ChevronLeft, ChevronRight } from "@/components/icons";
+
 interface SidebarToggleButtonsProps {
   isSidebarOpen: boolean;
   onCollapse: () => void;
@@ -24,19 +26,7 @@ export function SidebarToggleButtons({
         title="Collapse sidebar"
         aria-label="Collapse sidebar"
       >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
+        <ChevronLeft className="w-4 h-4" />
       </button>
 
       {/* Open button - beside sidebar when collapsed */}
@@ -50,19 +40,7 @@ export function SidebarToggleButtons({
         title="Expand sidebar"
         aria-label="Expand sidebar"
       >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
+        <ChevronRight className="w-4 h-4" />
       </button>
     </>
   );

@@ -1,8 +1,10 @@
 "use client";
 
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Logo } from "@/components/Logo";
 import type { GeoJSONLayerConfig, WMSLayerConfig } from "@/types/map";
+import { SearchInput } from "../ui/search-input";
+import { Button } from "../ui/button";
+import { ArrowRight } from "lucide-react";
 
 interface ActiveLayersSidebarProps {
   isOpen: boolean;
@@ -32,18 +34,29 @@ export function ActiveLayersSidebar({
         }`}
       >
         <div
-          className={`flex  transition-opacity duration-300 gap-2 items-center`}
+          className={`flex  transition-opacity duration-300 gap-2 items-center pb-2.5`}
         >
           <Logo size={24} className="text-primary" />
           <div className="text-xl text-primary">Map Edge</div>
         </div>
-        <div className="flex items-center justify-between mb-4 whitespace-nowrap">
-          <h2 className="text-lg font-semibold text-foreground">
-            Active Layers
-          </h2>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-          </div>
+        <div className="flex items-center justify-between flex-col gap-5 whitespace-nowrap py-5">
+          <SearchInput placeholder="Find Location/Dataset" />
+
+          <Button className="rounded-none font-normal p-3 w-full justify-between">
+            Search
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 3L8.285 3.6965L12.075 7.5H2V8.5H12.075L8.285 12.2865L9 13L14 8L9 3Z"
+                fill="white"
+              />
+            </svg>
+          </Button>
         </div>
 
         {/* Active Layers List */}
