@@ -4,7 +4,9 @@ import { Logo } from "@/components/Logo";
 import type { GeoJSONLayerConfig, WMSLayerConfig } from "@/types/map";
 import { SearchInput } from "../ui/search-input";
 import { Button } from "../ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MapPin, Ruler, Layers } from "@/components/icons";
+import { ButtonGroup } from "../ui/button-group";
+import { Polygon } from "../icons/custom";
 
 interface ActiveLayersSidebarProps {
   isOpen: boolean;
@@ -44,18 +46,34 @@ export function ActiveLayersSidebar({
 
           <Button className="rounded-none font-normal p-3 w-full justify-between">
             Search
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+            <ArrowRight className="w-4 h-4" />
+          </Button>
+        </div>
+
+        <div className="py-5 flex-col gap-5">
+          <ButtonGroup className="rounded-none mb-5 flex w-full">
+            <Button
+              className="rounded-none bg-gray-300 flex-1 border-0 shadow-none cursor-pointer hover:text-primary transition-colors"
+              variant={"secondary"}
             >
-              <path
-                d="M9 3L8.285 3.6965L12.075 7.5H2V8.5H12.075L8.285 12.2865L9 13L14 8L9 3Z"
-                fill="white"
-              />
-            </svg>
+              <MapPin className="w-5 h-5" />
+            </Button>
+            <Button
+              className="rounded-none bg-gray-300 flex-1 border-0 shadow-none cursor-pointer hover:text-primary transition-colors"
+              variant={"secondary"}
+            >
+              <Ruler className="w-5 h-5" />
+            </Button>
+            <Button
+              className="rounded-none bg-gray-300 flex-1 border-0 shadow-none cursor-pointer hover:text-primary transition-colors"
+              variant={"secondary"}
+            >
+              <Polygon />
+            </Button>
+          </ButtonGroup>
+
+          <Button className="rounded-none w-full" variant={"outline"}>
+            Reset
           </Button>
         </div>
 

@@ -18,10 +18,10 @@ export function SidebarToggleButtons({
       {/* Close button - beside sidebar when expanded */}
       <button
         onClick={onCollapse}
-        className={`absolute bg-gray-700 top-9 h-7 w-7 text-white hover:bg-gray-100 dark:hover:bg-gray-700  transition-all duration-300 flex items-center justify-center z-30 left-[312px]  ${
+        className={`absolute bg-gray-700 top-9 h-7 w-7 text-white cursor-pointer hover:bg-primary transition-all duration-500 ease-in-out flex items-center justify-center z-30 ${
           isSidebarOpen
-            ? "opacity-100 pointer-events-auto delay-200"
-            : "opacity-0 pointer-events-none"
+            ? "left-[312px] opacity-100 pointer-events-auto duration-75"
+            : "left-[84px] opacity-0 pointer-events-none"
         }`}
         title="Collapse sidebar"
         aria-label="Collapse sidebar"
@@ -32,10 +32,10 @@ export function SidebarToggleButtons({
       {/* Open button - beside sidebar when collapsed */}
       <button
         onClick={onExpand}
-        className={`absolute top-10 h-7 w-7 bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition-all duration-300 flex items-center justify-center z-30 left-[84px] ${
+        className={`absolute top-10 h-7 w-7 bg-primary hover:bg-primary/90 cursor-pointer text-white shadow-lg transition-all duration-500 ease-in-out flex items-center justify-center z-30 ${
           isSidebarOpen
-            ? "opacity-0"
-            : "opacity-100 pointer-events-auto delay-200"
+            ? "left-[312px] opacity-0 pointer-events-none"
+            : "left-[84px] opacity-100 pointer-events-auto duration-75"
         }`}
         title="Expand sidebar"
         aria-label="Expand sidebar"

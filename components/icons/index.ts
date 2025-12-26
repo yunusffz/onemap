@@ -24,6 +24,7 @@ export {
   Layers,
   MapPin,
   Navigation,
+  Ruler,
 } from "lucide-react";
 
 // Common actions
@@ -34,6 +35,7 @@ export {
   Upload,
   Eye,
   EyeOff,
+  ArrowRight,
 } from "lucide-react";
 
 // Custom icons
