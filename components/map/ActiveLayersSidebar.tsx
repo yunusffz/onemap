@@ -80,9 +80,64 @@ export function ActiveLayersSidebar({
 
         <div className="space-y-2 overflow-y-auto">
           {geojsonLayers.length === 0 && wmsLayers.length === 0 ? (
-            <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
-              No active layers
-            </p>
+            <div className="text-sm  py-5 flex flex-col gap-5">
+              <p>
+                Discover 215 geospatial datasets from 22 organizations along
+                with real-time Waze data on Civil Insight
+              </p>
+              <div className="bg-blue-50 p-5 text-center flex flex-col gap-5 justify-center ">
+                <div className="flex justify-center">
+                  <svg
+                    width="69"
+                    height="69"
+                    viewBox="0 0 69 69"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M34.5 69C53.5538 69 69 53.5538 69 34.5C69 15.4462 53.5538 0 34.5 0C15.4462 0 0 15.4462 0 34.5C0 53.5538 15.4462 69 34.5 69Z"
+                      fill="#D4DBF2"
+                    />
+                    <path
+                      d="M55.2001 69H13.8V24.38C15.7514 24.3778 17.6221 23.6017 19.0019 22.2219C20.3817 20.8421 21.1579 18.9713 21.16 17.02H47.84C47.838 17.9866 48.0276 18.9441 48.398 19.8369C48.7684 20.7298 49.3122 21.5403 49.9979 22.2217C50.6792 22.9076 51.4898 23.4515 52.3828 23.822C53.2757 24.1925 54.2333 24.3821 55.2001 24.38V69Z"
+                      fill="#F6F8FF"
+                    />
+                    <path
+                      d="M34.5 46.92C40.5972 46.92 45.54 41.9772 45.54 35.88C45.54 29.7828 40.5972 24.84 34.5 24.84C28.4027 24.84 23.46 29.7828 23.46 35.88C23.46 41.9772 28.4027 46.92 34.5 46.92Z"
+                      fill="#173DBB"
+                    />
+                    <path
+                      d="M38.4032 41.0844L34.5 37.1811L30.5968 41.0844L29.2957 39.7833L33.1989 35.8801L29.2957 31.9768L30.5968 30.6758L34.5 34.579L38.4032 30.6758L39.7043 31.9768L35.8011 35.8801L39.7043 39.7833L38.4032 41.0844Z"
+                      fill="white"
+                    />
+                    <rect
+                      x="23"
+                      y="55.2"
+                      width="23"
+                      height="2.76"
+                      fill="#D4DBF2"
+                    />
+                    <rect
+                      x="27.14"
+                      y="49.68"
+                      width="14.72"
+                      height="2.76"
+                      fill="#D4DBF2"
+                    />
+                  </svg>
+                </div>
+                <div className="flex flex-col gap-2.5">
+                  <div className="font-medium">
+                    No geospatial datasets have been selected yet.
+                  </div>
+                  <p>
+                    Click "Explore Data" to browse the geospatial datasets that
+                    will be displayed on the map. Enable "waze" data to show
+                    real-time traffic condition data.
+                  </p>
+                </div>
+              </div>
+            </div>
           ) : (
             <>
               {/* WMS Layers */}

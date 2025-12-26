@@ -26,6 +26,7 @@
   --color-gray-700: oklch(0.7155 0 0);
   --color-gray-300: oklch(0.9491 0 0);
   --color-gray-50: oklch(0.994 0 0);
+  --color-blue-50: oklch(0.9796 0.0095 273.36);
 
   --animate-in: fade-in 0.3s ease-in-out;
   --animate-out: fade-out 0.3s ease-in-out;
