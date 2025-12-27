@@ -82,6 +82,15 @@ export function SearchResultsSidebar({
         updatedAt: mapset.updated_at,
         source: mapset.producer.name,
       },
+      producer: {
+        name: mapset.producer.name,
+        description: mapset.producer.description,
+        thumbnail: mapset.producer.thumbnail,
+        address: mapset.producer.address,
+        phone_number: mapset.producer.phone_number,
+        email: mapset.producer.email,
+        website: mapset.producer.website,
+      },
     };
   };
 
@@ -145,7 +154,7 @@ export function SearchResultsSidebar({
                     onClick={() => handleCategoryClick(category.id)}
                     className="px-3 py-2 cursor-pointer hover:text-primary transition-colors flex items-center justify-between"
                   >
-                    <span className="text-sm font-medium">{category.name}</span>
+                    <span className="text-sm">{category.name}</span>
                     <svg
                       className={`w-4 h-4 transition-transform ${
                         selectedCategoryId === category.id ? "rotate-180" : ""
@@ -179,7 +188,7 @@ export function SearchResultsSidebar({
                               onClick={() => handleMapsetClick(mapset)}
                             >
                               <div className="flex-1">
-                                <div className="text-xs font-medium">{mapset.name}</div>
+                                <div className="text-sm">{mapset.name}</div>
                               </div>
                               <button
                                 onClick={(e) => {

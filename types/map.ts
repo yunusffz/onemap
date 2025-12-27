@@ -94,6 +94,15 @@ export interface LayerDetail extends LayerSearchResult {
     featureCount?: number;
     bbox?: [number, number, number, number]; // [west, south, east, north]
   };
+  producer?: {
+    name: string;
+    description?: string;
+    thumbnail?: string;
+    address?: string;
+    phone_number?: string;
+    email?: string;
+    website?: string;
+  };
 }
 
 export type { MapRef, ViewState };

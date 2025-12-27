@@ -4,6 +4,7 @@ import type { LayerDetail } from "@/types/map";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { X } from "lucide-react";
 
 interface LayerDetailsSidebarProps {
@@ -62,172 +63,277 @@ export function LayerDetailsSidebar({
           )}
         </div>
 
-        {/* Thumbnail */}
-        {layer.thumbnailUrl && (
-          <div className="mb-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
-            <img
-              src={layer.thumbnailUrl}
-              alt={layer.name}
-              className="w-full h-32 object-cover"
-            />
-          </div>
-        )}
+        {/* Tabs */}
+        <Tabs defaultValue="dataset" className="flex-1 flex flex-col">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="dataset">Dataset Information</TabsTrigger>
+            <TabsTrigger value="person">Person in Charge</TabsTrigger>
+          </TabsList>
 
-        {/* Description */}
-        {layer.description && (
-          <div className="mb-4">
-            <h3 className="text-sm font-medium mb-2">Description</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              {layer.description}
-            </p>
-          </div>
-        )}
-
-        <Separator className="my-4" />
-
-        {/* Metadata */}
-        {layer.metadata && (
-          <div className="space-y-3">
-            <h3 className="text-sm font-medium">Details</h3>
-
-            {layer.metadata.source && (
-              <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Source
-                </div>
-                <div className="text-sm">{layer.metadata.source}</div>
+          <TabsContent value="dataset" className="flex-1 overflow-y-auto space-y-4">
+            {/* Thumbnail */}
+            {layer.thumbnailUrl && (
+              <div className="rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                <img
+                  src={layer.thumbnailUrl}
+                  alt={layer.name}
+                  className="w-full h-32 object-cover"
+                />
               </div>
             )}
 
-            {layer.metadata.license && (
+            {/* Description */}
+            {layer.description && (
               <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  License
-                </div>
-                <div className="text-sm">{layer.metadata.license}</div>
+                <h3 className="text-sm font-medium mb-2">Description</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  {layer.description}
+                </p>
               </div>
             )}
 
-            {layer.metadata.featureCount !== undefined && (
-              <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Features
-                </div>
-                <div className="text-sm">
-                  {layer.metadata.featureCount.toLocaleString()}
-                </div>
-              </div>
-            )}
+            <Separator />
 
-            {layer.metadata.createdAt && (
-              <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Created
-                </div>
-                <div className="text-sm">
-                  {new Date(layer.metadata.createdAt).toLocaleDateString()}
-                </div>
-              </div>
-            )}
+            {/* Metadata */}
+            {layer.metadata && (
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium">Details</h3>
 
-            {layer.metadata.updatedAt && (
-              <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Last Updated
-                </div>
-                <div className="text-sm">
-                  {new Date(layer.metadata.updatedAt).toLocaleDateString()}
-                </div>
-              </div>
-            )}
-
-            {layer.metadata.tags && layer.metadata.tags.length > 0 && (
-              <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                  Tags
-                </div>
-                <div className="flex flex-wrap gap-1">
-                  {layer.metadata.tags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {layer.metadata.bbox && (
-              <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Bounding Box
-                </div>
-                <div className="text-xs font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded mt-1">
-                  West: {layer.metadata.bbox[0].toFixed(4)}
-                  <br />
-                  South: {layer.metadata.bbox[1].toFixed(4)}
-                  <br />
-                  East: {layer.metadata.bbox[2].toFixed(4)}
-                  <br />
-                  North: {layer.metadata.bbox[3].toFixed(4)}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Technical Info */}
-        <Separator className="my-4" />
-        <div className="space-y-3">
-          <h3 className="text-sm font-medium">Technical Information</h3>
-
-          {layer.type === "geojson" && (
-            <>
-              <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Geometry Type
-                </div>
-                <div className="text-sm capitalize">
-                  {layer.config.geometryType}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Source URL
-                </div>
-                <div className="text-xs font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded break-all">
-                  {layer.config.sourceUrl}
-                </div>
-              </div>
-            </>
-          )}
-
-          {layer.type === "wms" && (
-            <>
-              <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Base URL
-                </div>
-                <div className="text-xs font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded break-all">
-                  {layer.config.baseUrl}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Layers
-                </div>
-                <div className="text-sm">{layer.config.layers}</div>
-              </div>
-              {layer.config.version && (
-                <div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    WMS Version
+                {layer.metadata.source && (
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      Source
+                    </div>
+                    <div className="text-sm">{layer.metadata.source}</div>
                   </div>
-                  <div className="text-sm">{layer.config.version}</div>
-                </div>
+                )}
+
+                {layer.metadata.license && (
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      License
+                    </div>
+                    <div className="text-sm">{layer.metadata.license}</div>
+                  </div>
+                )}
+
+                {layer.metadata.featureCount !== undefined && (
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      Features
+                    </div>
+                    <div className="text-sm">
+                      {layer.metadata.featureCount.toLocaleString()}
+                    </div>
+                  </div>
+                )}
+
+                {layer.metadata.createdAt && (
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      Created
+                    </div>
+                    <div className="text-sm">
+                      {new Date(layer.metadata.createdAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                )}
+
+                {layer.metadata.updatedAt && (
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      Last Updated
+                    </div>
+                    <div className="text-sm">
+                      {new Date(layer.metadata.updatedAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                )}
+
+                {layer.metadata.tags && layer.metadata.tags.length > 0 && (
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                      Tags
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {layer.metadata.tags.map((tag) => (
+                        <Badge key={tag} variant="outline" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {layer.metadata.bbox && (
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      Bounding Box
+                    </div>
+                    <div className="text-xs font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded mt-1">
+                      West: {layer.metadata.bbox[0].toFixed(4)}
+                      <br />
+                      South: {layer.metadata.bbox[1].toFixed(4)}
+                      <br />
+                      East: {layer.metadata.bbox[2].toFixed(4)}
+                      <br />
+                      North: {layer.metadata.bbox[3].toFixed(4)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Technical Info */}
+            <Separator />
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium">Technical Information</h3>
+
+              {layer.type === "geojson" && (
+                <>
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      Geometry Type
+                    </div>
+                    <div className="text-sm capitalize">
+                      {layer.config.geometryType}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      Source URL
+                    </div>
+                    <div className="text-xs font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded break-all">
+                      {layer.config.sourceUrl}
+                    </div>
+                  </div>
+                </>
               )}
-            </>
-          )}
-        </div>
+
+              {layer.type === "wms" && (
+                <>
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      Base URL
+                    </div>
+                    <div className="text-xs font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded break-all">
+                      {layer.config.baseUrl}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      Layers
+                    </div>
+                    <div className="text-sm">{layer.config.layers}</div>
+                  </div>
+                  {layer.config.version && (
+                    <div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        WMS Version
+                      </div>
+                      <div className="text-sm">{layer.config.version}</div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="person" className="flex-1 overflow-y-auto space-y-4">
+            {layer.producer ? (
+              <>
+                {/* Producer Thumbnail */}
+                {layer.producer.thumbnail && (
+                  <div className="rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                    <img
+                      src={layer.producer.thumbnail}
+                      alt={layer.producer.name}
+                      className="w-full h-32 object-cover"
+                    />
+                  </div>
+                )}
+
+                {/* Organization Name */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium">Organization</h3>
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      Name
+                    </div>
+                    <div className="text-sm">{layer.producer.name}</div>
+                  </div>
+
+                  {layer.producer.description && (
+                    <div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        Description
+                      </div>
+                      <div className="text-sm">{layer.producer.description}</div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Contact Information */}
+                <Separator />
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium">Contact Information</h3>
+
+                  {layer.producer.address && (
+                    <div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        Address
+                      </div>
+                      <div className="text-sm">{layer.producer.address}</div>
+                    </div>
+                  )}
+
+                  {layer.producer.phone_number && (
+                    <div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        Phone
+                      </div>
+                      <div className="text-sm">{layer.producer.phone_number}</div>
+                    </div>
+                  )}
+
+                  {layer.producer.email && (
+                    <div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        Email
+                      </div>
+                      <a
+                        href={`mailto:${layer.producer.email}`}
+                        className="text-sm text-primary hover:underline"
+                      >
+                        {layer.producer.email}
+                      </a>
+                    </div>
+                  )}
+
+                  {layer.producer.website && (
+                    <div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        Website
+                      </div>
+                      <a
+                        href={layer.producer.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary hover:underline"
+                      >
+                        {layer.producer.website}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="text-sm text-gray-500 text-center py-8">
+                No person in charge information available
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
 
         {/* Action Buttons */}
         <div className="mt-auto pt-4 space-y-2">
