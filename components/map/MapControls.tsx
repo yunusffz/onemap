@@ -22,7 +22,7 @@ export function MapControls({
   onTerrainToggle,
 }: MapControlsProps) {
   return (
-    <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+    <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 hidden">
       <div className="bg-card text-card-foreground shadow-lg rounded-lg p-2 flex flex-col gap-1">
         <StyleSwitcher currentStyle={mapStyle} onStyleChange={onStyleChange} />
         <div className="flex gap-1">

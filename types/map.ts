@@ -72,4 +72,28 @@ export interface CustomLayerMetadata extends GeoJSONLayerConfig {
   featureCount?: number;
 }
 
+// Layer Search Types
+export interface LayerSearchResult {
+  id: string;
+  name: string;
+  description?: string;
+  type: "geojson" | "wms";
+  category?: string;
+  organization?: string;
+  thumbnailUrl?: string;
+  config: GeoJSONLayerConfig | WMSLayerConfig;
+}
+
+export interface LayerDetail extends LayerSearchResult {
+  metadata?: {
+    createdAt?: string;
+    updatedAt?: string;
+    source?: string;
+    license?: string;
+    tags?: string[];
+    featureCount?: number;
+    bbox?: [number, number, number, number]; // [west, south, east, north]
+  };
+}
+
 export type { MapRef, ViewState };

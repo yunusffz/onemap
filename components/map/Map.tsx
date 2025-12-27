@@ -1,9 +1,16 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import ReactMapGL, { NavigationControl, ScaleControl } from "react-map-gl/maplibre";
+import ReactMapGL, {
+  NavigationControl,
+  ScaleControl,
+} from "react-map-gl/maplibre";
 import type { MapRef, ViewState } from "@/types/map";
-import { DEFAULT_MAP_CONFIG, TERRAIN_SOURCE, TERRAIN_EXAGGERATION } from "@/lib/mapConfig";
+import {
+  DEFAULT_MAP_CONFIG,
+  TERRAIN_SOURCE,
+  TERRAIN_EXAGGERATION,
+} from "@/lib/mapConfig";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 interface MapProps {
@@ -75,6 +82,12 @@ export function Map({
 
   return (
     <div className={className}>
+      <style dangerouslySetInnerHTML={{__html: `
+        .maplibregl-ctrl-top-right {
+          top: 50% !important;
+          transform: translateY(-50%);
+        }
+      `}} />
       <ReactMapGL
         ref={mapRef}
         {...viewState}

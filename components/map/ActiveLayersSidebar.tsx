@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { ArrowRight, MapPin, Ruler } from "@/components/icons";
 import { ButtonGroup } from "../ui/button-group";
 import { Polygon } from "../icons/custom";
+import { useRouter } from "next/navigation";
 
 interface ActiveLayersSidebarProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ interface ActiveLayersSidebarProps {
   drawMode?: DrawMode;
   onDrawModeChange?: (mode: DrawMode) => void;
   onReset?: () => void;
+  onSearchClick?: () => void; // Optional: custom search handler
 }
 
 export function ActiveLayersSidebar({
@@ -25,7 +27,19 @@ export function ActiveLayersSidebar({
   drawMode,
   onDrawModeChange,
   onReset,
+  onSearchClick,
 }: ActiveLayersSidebarProps) {
+  const router = useRouter();
+
+  const handleSearchClick = () => {
+    if (onSearchClick) {
+      onSearchClick();
+    } else {
+      // Default: navigate to search page
+      router.push("/search");
+    }
+  };
+
   return (
     <aside
       className={`${
@@ -49,7 +63,10 @@ export function ActiveLayersSidebar({
         <div className="flex items-center justify-between flex-col gap-5 whitespace-nowrap py-5">
           <SearchInput placeholder="Find Location/Dataset" />
 
-          <Button className="rounded-none font-normal p-3 w-full justify-between">
+          <Button
+            className="rounded-none font-normal p-3 w-full justify-between"
+            onClick={handleSearchClick}
+          >
             Search
             <ArrowRight className="w-4 h-4" />
           </Button>
